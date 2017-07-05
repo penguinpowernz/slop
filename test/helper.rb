@@ -1,6 +1,6 @@
 $VERBOSE = true
 
-require 'slop'
+require 'slopt'
 
 require 'minitest/autorun'
 require 'stringio'

@@ -1,16 +1,13 @@
-Slop
+Slopt
 ====
 
-Slop is a simple option parser with an easy to remember syntax and friendly API.
-API Documentation is available [here](http://leejarvis.github.com/rdoc/slop/).
-
-[![Build Status](https://travis-ci.org/leejarvis/slop.png?branch=master)](http://travis-ci.org/leejarvis/slop)
+Slopt is a fork of Lee Jarvis simple option parser at v3.6.0.  In my eyes v3.6.0 is perfect, with an easy to remember syntax and friendly API.
 
 Usage
 -----
 
 ```ruby
-opts = Slop.parse do
+opts = Slopt.parse do
   banner 'Usage: foo.rb [options]'
 
   on 'name=', 'Your name'
@@ -28,7 +25,7 @@ opts.to_hash   #=> {:name=>"Lee", :password=>nil, :verbose=>true}
 Installation
 ------------
 
-    gem install slop
+    gem install slopt
 
 Printing Help
 -------------
@@ -39,7 +36,7 @@ can see this by calling `opts.help` or simply `puts opts`.
 Configuration Options
 ---------------------
 
-All of these options can be sent to `Slop.new` or `Slop.parse` in Hash form.
+All of these options can be sent to `Slopt.new` or `Slopt.parse` in Hash form.
 
 | Option | Description | Default/Example |
 | ------ | ----------- | --------------- |
@@ -57,7 +54,7 @@ Lists
 -----
 
 ```ruby
-opts = Slop.parse do
+opts = Slopt.parse do
   on :list=, as: Array
 end
 # ruby run.rb --list one,two
@@ -69,7 +66,7 @@ opts[:list] #=> ["one", "two", "three"]
 You can also specify a delimiter and limit.
 
 ```ruby
-opts = Slop.parse do
+opts = Slopt.parse do
   on :list=, as: Array, delimiter: ':', limit: 2
 end
 # ruby run.rb --list one:two:three
@@ -80,7 +77,7 @@ Ranges
 ------
 
 ```ruby
-opts = Slop.parse do
+opts = Slopt.parse do
   on :range=, as: Range
 end
 # ruby run.rb --range 1..10
@@ -95,16 +92,16 @@ opts[:range] #=> 1..10
 
 Strict Flags
 ------------
-If you want to print `--help` automatically when a required flag is left out, you can rescue `Slop::Error` like so:
+If you want to print `--help` automatically when a required flag is left out, you can rescue `Slopt::Error` like so:
 
 ```
-opts = Slop.new strict: true do
+opts = Slopt.new strict: true do
   # options here...
 end
 
 begin
   opts.parse
-rescue Slop::Error => e
+rescue Slopt::Error => e
   puts e.message
   puts opts # print help
 end
@@ -113,13 +110,13 @@ end
 Autocreate
 ----------
 
-Slop has an 'autocreate' feature. This feature is intended to create
+Slopt has an 'autocreate' feature. This feature is intended to create
 options on the fly, without having to specify them yourself. In some case,
 using this code could be all you need in your application:
 
 ```ruby
 # ruby run.rb --foo bar --baz --name lee
-opts = Slop.parse(autocreate: true)
+opts = Slopt.parse(autocreate: true)
 opts.to_hash #=> {:foo=>"bar", :baz=>true, :name=>"lee"}
 opts.fetch_option(:name).expects_argument? #=> true
 ```
@@ -127,10 +124,10 @@ opts.fetch_option(:name).expects_argument? #=> true
 Commands
 --------
 
-Slop supports git style sub-commands, like so:
+Slopt supports git style sub-commands, like so:
 
 ```ruby
-opts = Slop.parse do
+opts = Slopt.parse do
   on '-v', 'Print the version' do
     puts "Version 1.0"
   end
@@ -162,7 +159,7 @@ The *parse!*  method will remove any options and option arguments from the origi
 
 ```ruby
 # restarguments.rb
-opts = Slop.parse! do
+opts = Slopt.parse! do
   on :foo
 end
 ```
@@ -182,41 +179,4 @@ ARGV #=> ["bar"]
 Woah woah, why you hating on OptionParser?
 ------------------------------------------
 
-I'm not, honestly! I love OptionParser. I really do, it's a fantastic library.
-So why did I build Slop? Well, I find myself using OptionParser to simply
-gather a bunch of key/value options, usually you would do something like this:
-
-```ruby
-require 'optparse'
-
-things = {}
-
-opt = OptionParser.new do |opt|
-  opt.on('-n', '--name NAME', 'Your name') do |name|
-    things[:name] = name
-  end
-
-  opt.on('-a', '--age AGE', 'Your age') do |age|
-    things[:age] = age.to_i
-  end
-
-  # you get the point
-end
-
-opt.parse
-things #=> { :name => 'lee', :age => 105 }
-```
-
-Which is all great and stuff, but it can lead to some repetition. The same
-thing in Slop:
-
-```ruby
-require 'slop'
-
-opts = Slop.parse do
-  on :n, :name=, 'Your name'
-  on :a, :age=, 'Your age', as: Integer
-end
-
-opts.to_hash #=> { :name => 'lee', :age => 105 }
-```
+You like RSI? Cos I don't.

@@ -2,12 +2,12 @@ require 'helper'
 
 class OptionTest < TestCase
   def option(*args, &block)
-    Slop.new.on(*args, &block)
+    Slopt.new.on(*args, &block)
   end
 
   def option_with_argument(*args, &block)
     options = args.shift
-    slop = Slop.new
+    slop = Slopt.new
     option = slop.opt(*args)
     slop.parse(options)
     slop.options.find {|opt| opt.key == option.key }
@@ -52,18 +52,18 @@ class OptionTest < TestCase
   end
 
   test "integer type cast" do
-    opts = Slop.new
+    opts = Slopt.new
     opts.on :f=, :as => Integer
     opts.parse %w'-f 1'
     assert_equal 1, opts[:f]
 
-    opts = Slop.new(:strict => true) { on :r=, :as => Integer }
-    assert_raises(Slop::InvalidArgumentError) { opts.parse %w/-r abc/ }
+    opts = Slopt.new(:strict => true) { on :r=, :as => Integer }
+    assert_raises(Slopt::InvalidArgumentError) { opts.parse %w/-r abc/ }
   end
 
   test "float type cast" do
-    opts = Slop.new(:strict => true) { on :r=, :as => Float }
-    assert_raises(Slop::InvalidArgumentError) { opts.parse %w/-r abc/ }
+    opts = Slopt.new(:strict => true) { on :r=, :as => Float }
+    assert_raises(Slopt::InvalidArgumentError) { opts.parse %w/-r abc/ }
   end
 
   test "symbol type cast" do
@@ -80,8 +80,8 @@ class OptionTest < TestCase
     assert_equal((1..1), option_value(%w/-r 1/, :r=, :as => Range))
     assert_equal((-1..10), option_value(%w/-r -1..10/, :r, :as => Range, :optional_argument => true))
 
-    opts = Slop.new(:strict => true) { on :r=, :as => Range }
-    assert_raises(Slop::InvalidArgumentError) { opts.parse %w/-r abc/ }
+    opts = Slopt.new(:strict => true) { on :r=, :as => Range }
+    assert_raises(Slopt::InvalidArgumentError) { opts.parse %w/-r abc/ }
   end
 
   test "array type cast" do
@@ -97,7 +97,7 @@ class OptionTest < TestCase
   end
 
   test "adding custom types" do
-    opts = Slop.new
+    opts = Slopt.new
     opt = opts.on :f=, :as => :reverse
     opt.types[:reverse] = proc { |v| v.reverse }
     opts.parse %w'-f bar'
@@ -113,14 +113,14 @@ class OptionTest < TestCase
   # end type casting tests
 
   test "using a default value as fallback" do
-    opts = Slop.new
+    opts = Slopt.new
     opts.on :f, :argument => :optional, :default => 'foo'
     opts.parse %w'-f'
     assert_equal 'foo', opts[:f]
   end
 
   test "printing options" do
-    slop = Slop.new
+    slop = Slopt.new
     slop.opt :n, :name=, 'Your name'
     slop.opt :age=, 'Your age'
     slop.opt :V, 'Display the version'
@@ -131,14 +131,14 @@ class OptionTest < TestCase
   end
 
   test "printing options that have defaults" do
-    opts = Slop.new
+    opts = Slopt.new
     opts.on :n, :name=, 'Your name', :default => 'Lee'
 
     assert_equal "    -n, --name      Your name (default: Lee)", opts.fetch_option(:name).to_s
   end
 
   test "overwriting the help text" do
-    slop = Slop.new
+    slop = Slopt.new
     slop.on :foo, :help => '    -f, --foo  SOMETHING FOOEY'
     assert_equal '    -f, --foo  SOMETHING FOOEY', slop.fetch_option(:foo).help
   end

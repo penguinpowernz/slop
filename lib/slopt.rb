@@ -1,7 +1,7 @@
-require 'slop/option'
-require 'slop/commands'
+require 'slopt/option'
+require 'slopt/commands'
 
-class Slop
+class Slopt
   include Enumerable
 
   VERSION = '3.6.0'
@@ -24,7 +24,7 @@ class Slop
   # Raised when an invalid command is found and the strict flag is enabled.
   class InvalidCommandError < Error; end
 
-  # Returns a default Hash of configuration options this Slop instance uses.
+  # Returns a default Hash of configuration options this Slopt instance uses.
   DEFAULT_OPTIONS = {
     :strict => false,
     :help => false,
@@ -41,25 +41,25 @@ class Slop
   class << self
 
     # items  - The Array of items to extract options from (default: ARGV).
-    # config - The Hash of configuration options to send to Slop.new().
+    # config - The Hash of configuration options to send to Slopt.new().
     # block  - An optional block used to add options.
     #
     # Examples:
     #
-    #   Slop.parse(ARGV, :help => true) do
+    #   Slopt.parse(ARGV, :help => true) do
     #     on '-n', '--name', 'Your username', :argument => true
     #   end
     #
-    # Returns a new instance of Slop.
+    # Returns a new instance of Slopt.
     def parse(items = ARGV, config = {}, &block)
       parse! items.dup, config, &block
     end
 
     # items  - The Array of items to extract options from (default: ARGV).
-    # config - The Hash of configuration options to send to Slop.new().
+    # config - The Hash of configuration options to send to Slopt.new().
     # block  - An optional block used to add options.
     #
-    # Returns a new instance of Slop.
+    # Returns a new instance of Slopt.
     def parse!(items = ARGV, config = {}, &block)
       config, items = items, ARGV if items.is_a?(Hash) && config.empty?
       slop = new config, &block
@@ -67,7 +67,7 @@ class Slop
       slop
     end
 
-    # Build a Slop object from a option specification.
+    # Build a Slopt object from a option specification.
     #
     # This allows you to design your options via a simple String rather
     # than programatically. Do note though that with this method, you're
@@ -75,11 +75,11 @@ class Slop
     # options.
     #
     # string - The optspec String
-    # config - A Hash of configuration options to pass to Slop.new
+    # config - A Hash of configuration options to pass to Slopt.new
     #
     # Examples:
     #
-    #   opts = Slop.optspec(<<-SPEC)
+    #   opts = Slopt.optspec(<<-SPEC)
     #   ruby foo.rb [options]
     #   ---
     #   n,name=     Your name
@@ -90,12 +90,11 @@ class Slop
     #
     #   opts.fetch_option(:name).description #=> "Your name"
     #
-    # Returns a new instance of Slop.
+    # Returns a new instance of Slopt.
     def optspec(string, config = {})
-      warn "[DEPRECATED] `Slop.optspec` is deprecated and will be removed in version 4"
       config[:banner], optspec = string.split(/^--+$/, 2) if string[/^--+$/]
       lines = optspec.split("\n").reject(&:empty?)
-      opts  = Slop.new(config)
+      opts  = Slopt.new(config)
 
       lines.each do |line|
         opt, description = line.split(' ', 2)
@@ -199,7 +198,7 @@ class Slop
   # Returns a new instance of Slop mapped to this command.
   def command(command, options = {}, &block)
     options = @config.merge(options)
-    @commands[command.to_s] = Slop.new(options.merge(:command => command.to_s), &block)
+    @commands[command.to_s] = Slopt.new(options.merge(:command => command.to_s), &block)
   end
 
   # Parse a list of items, executing and gathering options along the way.

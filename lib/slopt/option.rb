@@ -1,4 +1,4 @@
-class Slop
+class Slopt
   class Option
 
     # The default Hash of configuration options this class uses.

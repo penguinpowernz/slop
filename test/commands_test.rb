@@ -3,7 +3,7 @@ require 'helper'
 class CommandsTest < TestCase
 
   def setup
-    @opts = Slop.new do |o|
+    @opts = Slopt.new do |o|
       o.on :v, :version
       o.command :add do |add|
         add.on :v, 'verbose mode'

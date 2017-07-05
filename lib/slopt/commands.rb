@@ -1,4 +1,4 @@
-class Slop
+class Slopt
   class Commands
     include Enumerable
 
@@ -39,10 +39,6 @@ class Slop
       @banner = nil
       @triggered_command = nil
 
-      warn "[DEPRECATED] Slop::Commands is deprecated and will be removed in "\
-        "Slop version 4. Check out http://leejarvis.github.io/slop/#commands for "\
-        "a new implementation of commands."
-
       if block_given?
         block.arity == 1 ? yield(self) : instance_eval(&block)
       end
@@ -66,7 +62,7 @@ class Slop
     #
     # Returns the newly created Slop instance mapped to command.
     def on(command, config = {}, &block)
-      commands[command.to_s] = Slop.new(@config.merge(config), &block)
+      commands[command.to_s] = Slopt.new(@config.merge(config), &block)
     end
 
     # Add a Slop instance used when no other commands exist.
